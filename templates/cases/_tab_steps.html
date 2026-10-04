@@ -1,0 +1,49 @@
+{% load fuatilia %}
+<div class="card">
+  <h2>{{ playbook.name }}</h2>
+  <p class="muted">{{ playbook.summary }}</p>
+  <ol class="steps mt-12">
+    {% for item in steps %}
+      {% with record=item.record definition=item.definition %}
+      <li class="{% if record.status == 'DONE' %}done{% elif record.status == 'SKIPPED' %}skipped{% elif item.is_current %}current{% endif %}">
+        <div class="step-title">{{ definition.title }}</div>
+        {% if record.status == "DONE" %}
+          <div class="muted">Done {{ record.done_on|date:"j M Y" }}{% if record.notes %} · {{ record.notes }}{% endif %}
+            <form class="inline" method="post" action="{% url 'step_reopen' case.reference record.pk %}">{% csrf_token %}<button class="btn-link" type="submit">undo</button></form>
+          </div>
+        {% elif record.status == "SKIPPED" %}
+          <div class="muted">Skipped <form class="inline" method="post" action="{% url 'step_reopen' case.reference record.pk %}">{% csrf_token %}<button class="btn-link" type="submit">undo</button></form></div>
+        {% elif item.is_current and case.is_active %}
+          <div class="current-box">
+            {% if record.waiting %}
+              <p><strong>Give them time.</strong> This step opens {{ record.available_on|date:"j F" }} ({% due_label record.available_on %}). You can still do it now if you need to.</p>
+            {% endif %}
+            <ul>{% for line in definition.guidance %}<li>{{ line }}</li>{% endfor %}</ul>
+            {% if definition.channels %}
+              <p><strong>Where to go:</strong></p>
+              <ul>{% for channel in definition.channels %}<li>{% if channel.kind == "url" %}<a href="{{ channel.value }}" target="_blank" rel="noopener">{{ channel.label }}</a>{% elif channel.kind == "email" %}{{ channel.label }}: <a href="mailto:{{ channel.value }}">{{ channel.value }}</a>{% else %}{{ channel.label }}: {{ channel.value }}{% endif %}</li>{% endfor %}</ul>
+            {% endif %}
+            <div class="actions mt-12">
+              {% if definition.letter %}
+                <form class="inline" method="post" action="{% url 'letter_new' case.reference %}">{% csrf_token %}<input type="hidden" name="template" value="{{ definition.letter }}"><button class="btn btn-primary btn-sm" type="submit">Prepare the letter</button></form>
+              {% endif %}
+              {% if definition.escalation %}<a class="btn btn-secondary btn-sm" href="{% url 'bundle_view' case.reference %}">Open evidence bundle</a>{% endif %}
+            </div>
+            <form method="post" action="{% url 'step_done' case.reference record.pk %}" class="mt-12" novalidate>
+              {% csrf_token %}
+              {% with form=step_form %}{% include "_form.html" %}{% endwith %}
+              <div class="actions">
+                <button class="btn btn-secondary btn-sm" type="submit">Mark this step done</button>
+              </div>
+            </form>
+            <form method="post" action="{% url 'step_skip' case.reference record.pk %}" class="mt-8">{% csrf_token %}<button class="btn-link" type="submit">Skip this step</button></form>
+          </div>
+        {% else %}
+          <div class="muted">{{ definition.guidance.0 }}</div>
+        {% endif %}
+      </li>
+      {% endwith %}
+    {% endfor %}
+  </ol>
+  {% if playbook.reviewed_on %}<p class="muted small">Route last reviewed: {{ playbook.reviewed_on }}. This is general information, not legal advice.</p>{% endif %}
+</div>

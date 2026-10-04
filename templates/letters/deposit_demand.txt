@@ -1,0 +1,16 @@
+{% load fuatilia %}{% autoescape off %}{{ today|date:"j F Y" }}
+
+To: {{ case.opponent_name }}
+
+Dear Sir or Madam,
+
+RE: FINAL DEMAND – REFUND OF DEPOSIT OF KES {{ amount|default:"[amount]" }}
+
+I refer to my request{% if first_letter %} of {{ first_letter.sent_on|date:"j F Y" }}{% endif %} for the refund of my deposit after I moved out on {{ case.incident_date|date:"j F Y" }}. To date the deposit has not been refunded, and I have not received any account of deductions.
+
+I hereby demand payment of KES {{ amount|default:"[amount]" }} within 14 days of this letter, that is by {{ today|add_days:14|date:"j F Y" }}.
+
+If the deposit is not refunded by that date, I will pursue its recovery through the Small Claims Court without further notice.
+
+{% include "letters/_signature.txt" %}
+{% endautoescape %}

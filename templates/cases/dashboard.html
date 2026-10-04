@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load fuatilia %}
+{% block title %}My cases{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Hi {{ user.first_name_display }}</h1>
+    <p class="muted">{{ active_count }} open case{{ active_count|pluralize }}</p>
+  </div>
+  <a class="btn btn-primary" href="{% url 'case_new' %}">+ New case</a>
+</div>
+
+<div class="grid-3 mb-20">
+  <div class="card stat"><div class="label">Money at stake in open cases</div><div class="value">{{ totals.at_stake|kes }}</div></div>
+  <div class="card stat"><div class="label">Recovered so far</div><div class="value">{{ totals.recovered|kes }}</div></div>
+  <div class="card stat"><div class="label">Cases resolved</div><div class="value">{{ totals.resolved }}</div></div>
+</div>
+
+{% if due %}
+  <h2>Needs your action</h2>
+  <div class="grid mb-20">
+    {% for case in due %}{% include "cases/_case_card.html" %}{% endfor %}
+  </div>
+{% endif %}
+
+<h2>{% if due %}Other open cases{% else %}Open cases{% endif %}</h2>
+{% if upcoming %}
+  <div class="grid mb-20">
+    {% for case in upcoming %}{% include "cases/_case_card.html" %}{% endfor %}
+  </div>
+{% elif not due %}
+  <div class="empty mb-20">
+    <p><strong>No open cases.</strong></p>
+    <p>Got a refund that never came, a deposit not returned or a document stuck somewhere?</p>
+    <a class="btn btn-primary" href="{% url 'case_new' %}">Open a case</a>
+  </div>
+{% endif %}
+
+{% if closed %}
+  <h2>Closed</h2>
+  <div class="card">
+    {% for case in closed %}
+      <div class="case-row {% if not forloop.last %}row-divider{% endif %}">
+        <div>
+          <a href="{% url 'case_detail' case.reference %}"><strong>{{ case.title }}</strong></a>
+          <div class="ref">{{ case.reference }} · {{ case.opponent_name }}</div>
+        </div>
+        <span class="badge tone-{{ case.status|status_tone }}">{{ case.get_status_display }}</span>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

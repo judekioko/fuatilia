@@ -1,0 +1,20 @@
+{% load fuatilia %}{% autoescape off %}{{ today|date:"j F Y" }}
+
+To: {{ case.opponent_name }}
+
+Dear Sir or Madam,
+
+RE: REFUND OF MY DEPOSIT{% if case.account_reference %} – {{ case.account_reference|upper }}{% endif %}
+
+I was your tenant at {{ case.account_reference|default:"[property and unit]" }} and moved out on {{ case.incident_date|date:"j F Y" }}. I handed over the premises and keys on that date.
+
+{{ case.description }}
+
+I paid a deposit of KES {{ amount|default:"[amount]" }}. I request a full refund of the deposit. If you intend to deduct anything, please send me an itemised written account of each deduction with supporting receipts or photographs.
+
+Please refund the deposit, or send the itemised account, within 14 days, by {{ today|add_days:14|date:"j F Y" }}.
+{% if user.phone %}
+You can send the refund by M-Pesa to {{ user.phone }}.{% endif %}
+
+{% include "letters/_signature.txt" %}
+{% endautoescape %}

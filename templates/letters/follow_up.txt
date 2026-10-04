@@ -1,0 +1,19 @@
+{% load fuatilia %}{% autoescape off %}{{ today|date:"j F Y" }}
+
+To: {{ case.opponent_name }}
+
+Dear Sir or Madam,
+
+RE: FOLLOW-UP – {{ case.title|upper }}
+
+{% if first_letter %}I wrote to you on {{ first_letter.sent_on|date:"j F Y" }} about the matter below{% else %}I raised the matter below with you on {{ case.incident_date|date:"j F Y" }}{% endif %}. As of today it has not been resolved{% if case.opponent_reference %} (your reference {{ case.opponent_reference }}){% endif %}.
+
+{{ case.description }}
+
+{% include "letters/_facts.txt" %}
+I again ask you to: {{ case.desired_outcome }}
+
+Please treat this as urgent and respond in writing within 7 days, by {{ today|add_days:7|date:"j F Y" }}. Please also tell me who in your organisation handles escalated complaints. If I do not hear from you by then I will escalate this complaint to the regulator.
+
+{% include "letters/_signature.txt" %}
+{% endautoescape %}

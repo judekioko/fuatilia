@@ -1,0 +1,12 @@
+{% load fuatilia %}{% autoescape off %}Hello {{ user.first_name_display }},
+
+These cases are due for a follow-up:
+{% for case in cases %}
+- {{ case.title }} ({{ case.reference }}), against {{ case.opponent_name }}: {% due_label case.next_follow_up %}{% if base_url %}
+  {{ base_url }}{% url 'case_detail' case.reference %}{% endif %}
+{% endfor %}
+A short, polite follow-up in writing keeps your case moving and adds to your evidence.
+
+Fuatilia
+You can turn these emails off in your account settings.
+{% endautoescape %}

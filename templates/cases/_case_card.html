@@ -1,0 +1,17 @@
+{% load fuatilia %}
+<a class="card card-link" href="{% url 'case_detail' case.reference %}">
+  <div class="case-row">
+    <div>
+      <div class="ref">{{ case.reference }} · {{ case.get_category_display }}</div>
+      <strong>{{ case.title }}</strong>
+      <div class="muted">Against {{ case.opponent_name }}{% if case.amount_claimed %} · {{ case.amount_claimed|kes }}{% endif %} · {{ case.days_open }} days</div>
+      <div class="next">
+        Next: {{ case.next_step_title }}
+        {% if case.next_follow_up %}
+          — <span class="{% if case.follow_up_overdue %}due-overdue{% elif case.follow_up_due_today %}due-today{% endif %}">{% due_label case.next_follow_up %}</span>
+        {% endif %}
+      </div>
+    </div>
+    <span class="badge tone-{{ case.status|status_tone }}">{{ case.get_status_display }}</span>
+  </div>
+</a>

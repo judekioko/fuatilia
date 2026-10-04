@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Add evidence{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <p class="muted"><a href="{% url 'case_detail' case.reference %}?tab=evidence">← Back to {{ case.reference }}</a></p>
+  <h1>Add evidence</h1>
+  <p class="muted">Upload a file, or paste the text of an SMS, M-Pesa or WhatsApp message. Pasted M-Pesa messages are read automatically for the date, amount and transaction code.</p>
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include "_form.html" %}
+    <label class="checkbox mb-16"><input type="checkbox" name="add_to_timeline" value="1" checked> <span>Also add it to the timeline</span></label>
+    <div class="actions">
+      <button class="btn btn-primary" type="submit">Save</button>
+      <button class="btn btn-secondary" type="submit" name="another" value="1">Save and add another</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

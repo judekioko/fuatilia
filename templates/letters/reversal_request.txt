@@ -1,0 +1,20 @@
+{% load fuatilia %}{% autoescape off %}{{ today|date:"j F Y" }}
+
+To: {{ case.opponent_name }} – Customer Care
+
+Dear Sir or Madam,
+
+RE: REQUEST TO REVERSE A TRANSACTION{% if case.account_reference %} – {{ case.account_reference }}{% endif %}
+
+On {{ case.incident_date|date:"j F Y" }} the following transaction was made from my account and I am requesting that it be reversed.
+
+{{ case.description }}
+
+{% include "letters/_facts.txt" %}{% for item in evidence %}{% if item.kind == "MESSAGE" and item.text %}
+Transaction message:
+"{{ item.text|truncatechars:400 }}"
+{% endif %}{% endfor %}
+Please reverse the transaction and confirm to me in writing, with a reference number for this request.
+
+{% include "letters/_signature.txt" %}
+{% endautoescape %}

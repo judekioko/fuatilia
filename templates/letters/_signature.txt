@@ -1,0 +1,5 @@
+Yours faithfully,
+
+{{ user.full_name }}
+{% if user.phone %}{{ user.phone }}
+{% endif %}{{ user.email }}

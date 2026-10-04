@@ -1,0 +1,45 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ APP_NAME }}{% endblock %} · {{ APP_NAME }}</title>
+  <meta name="description" content="Turn a problem with a company or office into an organised case, with evidence, letters and reminders, until you get an answer.">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <script src="{% static 'js/app.js' %}" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'home' %}{% endif %}">
+        <span class="brand-mark" aria-hidden="true">F</span>{{ APP_NAME }}
+      </a>
+      <nav class="topnav" aria-label="Main">
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard' %}">My cases</a>
+          <a href="{% url 'case_new' %}">New case</a>
+          <a href="{% url 'account_settings' %}">Account</a>
+          <form class="inline" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-secondary btn-sm" type="submit">Sign out</button></form>
+        {% else %}
+          <a href="{% url 'login' %}">Sign in</a>
+          <a class="btn btn-primary btn-sm" href="{% url 'signup' %}">Start a case</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="wrap">
+      {% if messages %}
+        <ul class="messages">{% for message in messages %}<li class="{{ message.tags }}">{{ message }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="wrap">
+      {{ APP_NAME }} helps you organise and follow up your own complaints. It is not a law firm and does not give legal advice.
+      · <a href="{% url 'privacy' %}">Privacy</a>
+    </div>
+  </footer>
+</body>
+</html>

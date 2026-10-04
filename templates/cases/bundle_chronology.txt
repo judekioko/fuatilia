@@ -1,0 +1,11 @@
+{% autoescape off %}EVIDENCE BUNDLE – {{ case.reference }}
+{{ case.title }}
+Against: {{ case.opponent_name }}
+Prepared by: {{ case.owner.full_name }} on {% now "j F Y" %}
+
+CHRONOLOGY
+{% for event in case.events.all %}{% if not event.automatic or event.kind != "NOTE" %}{{ event.occurred_on|date:"d M Y" }}  {{ event.title }}{% if event.details and event.kind != "INCIDENT" %} – {{ event.details }}{% endif %}
+{% endif %}{% endfor %}
+EXHIBITS
+{% for item in case.evidence.all %}E{{ forloop.counter }}  {{ item.occurred_on|date:"d M Y"|default:"undated" }}  {{ item.title }} ({{ item.get_kind_display }})
+{% endfor %}{% endautoescape %}

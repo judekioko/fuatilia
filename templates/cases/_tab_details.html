@@ -1,0 +1,21 @@
+{% load fuatilia %}
+<div class="card">
+  <h2>Case details</h2>
+  <dl class="facts">
+    <dt>Reference</dt><dd>{{ case.reference }}</dd>
+    <dt>Against</dt><dd>{{ case.opponent_name }}</dd>
+    {% if case.opponent_contact %}<dt>Their contact</dt><dd>{{ case.opponent_contact }}</dd>{% endif %}
+    {% if case.opponent_reference %}<dt>Their reference</dt><dd>{{ case.opponent_reference }}</dd>{% endif %}
+    {% if case.account_reference %}<dt>Your account / property</dt><dd>{{ case.account_reference }}</dd>{% endif %}
+    <dt>Date</dt><dd>{{ case.incident_date|date:"j F Y" }}</dd>
+    <dt>Amount at stake</dt><dd>{{ case.amount_claimed|kes }}</dd>
+  </dl>
+  <h3 class="mt-20">What happened</h3>
+  <p>{{ case.description|linebreaksbr }}</p>
+  <h3>What you want</h3>
+  <p>{{ case.desired_outcome|linebreaksbr }}</p>
+  <form method="post" action="{% url 'case_delete' case.reference %}" class="mt-20">
+    {% csrf_token %}
+    <button class="btn btn-danger btn-sm" type="submit" data-confirm="Delete this case and all its documents? This cannot be undone.">Delete case</button>
+  </form>
+</div>

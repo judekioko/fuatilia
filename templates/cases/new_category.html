@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}New case{% endblock %}
+{% block content %}
+<div class="narrow">
+  <h1>What is the problem about?</h1>
+  <p class="muted">Pick the closest match. It decides which steps and letters we suggest.</p>
+  <div class="category-grid mt-12">
+    {% for value, label in categories %}
+      <a href="{% url 'case_new' %}?category={{ value }}">{{ label }}</a>
+    {% endfor %}
+  </div>
+  <p class="muted mt-20">Medical records and health-cover claims are not supported yet, to keep your health information safe.</p>
+</div>
+{% endblock %}

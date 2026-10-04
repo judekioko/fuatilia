@@ -1,0 +1,16 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ letter.subject }}</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <script src="{% static 'js/app.js' %}" defer></script>
+</head>
+<body class="print-page">
+  <div class="wrap narrow">
+    <p class="no-print actions mt-20"><button class="btn btn-primary" data-print>Print or save as PDF</button></p>
+    <div class="letter-paper">{{ letter.body }}</div>
+  </div>
+</body>
+</html>
