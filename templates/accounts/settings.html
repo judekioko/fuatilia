@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Account{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Account</h1></div>
+<div class="grid-2">
+  <div class="card">
+    <h2>Your details</h2>
+    <p class="muted">{{ user.email }}</p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% include "_form.html" %}
+      <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+    <p class="mt-12"><a href="{% url 'password_change' %}">Change password</a></p>
+  </div>
+  <div class="stack">
+    <div class="card">
+      <h2>Download my data</h2>
+      <p>A ZIP of your profile, every case, letter and uploaded document.</p>
+      <a class="btn btn-secondary" href="{% url 'account_export' %}">Download my data</a>
+    </div>
+    <div class="card">
+      <h2>Delete my account</h2>
+      <p>Permanently deletes your account, all cases and all uploaded documents. This cannot be undone.</p>
+      <form method="post" action="{% url 'account_delete' %}" novalidate>
+        {% csrf_token %}
+        {% with form=delete_form %}{% include "_form.html" %}{% endwith %}
+        <button class="btn btn-danger" type="submit">Delete everything</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

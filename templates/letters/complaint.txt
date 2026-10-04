@@ -1,0 +1,22 @@
+{% load fuatilia %}{% autoescape off %}{{ today|date:"j F Y" }}
+
+To: {{ case.opponent_name }}
+
+Dear Sir or Madam,
+
+RE: FORMAL COMPLAINT – {{ case.title|upper }}
+
+I am writing to formally complain about the following.
+
+{{ case.description }}
+
+{% include "letters/_facts.txt" %}
+What I am asking you to do:
+{{ case.desired_outcome }}
+
+Please resolve this and confirm in writing within 14 days of the date of this letter, that is by {{ today|add_days:14|date:"j F Y" }}. If I do not receive a satisfactory response by then, I will escalate the matter to the relevant regulator without further notice.
+
+I have kept copies of the relevant documents and messages{% if evidence %} ({{ evidence|length }} item{{ evidence|length|pluralize }}){% endif %} and can share them on request.
+
+{% include "letters/_signature.txt" %}
+{% endautoescape %}

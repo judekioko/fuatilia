@@ -1,0 +1,22 @@
+<div class="card">
+  <div class="page-head">
+    <h2>Timeline</h2>
+    <a class="btn btn-primary btn-sm" href="{% url 'event_add' case.reference %}">+ Add to timeline</a>
+  </div>
+  <ul class="timeline">
+    {% for event in events %}
+      <li>
+        <div class="date">{{ event.occurred_on|date:"j M Y" }}</div>
+        <div>
+          <strong class="{% if event.automatic %}auto{% endif %}">{{ event.title }}</strong>
+          {% if event.get_kind_display != event.title %}<span class="muted"> · {{ event.get_kind_display }}</span>{% endif %}
+          {% if event.details and event.kind != "INCIDENT" %}<div>{{ event.details|linebreaksbr }}</div>{% endif %}
+          {% for item in event.evidence.all %}<span class="badge tone-grey">{{ item.title }}</span> {% endfor %}
+          {% if not event.automatic %}
+            <form class="inline" method="post" action="{% url 'event_delete' case.reference event.pk %}">{% csrf_token %}<button class="btn-link" type="submit" data-confirm="Remove this entry?">remove</button></form>
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

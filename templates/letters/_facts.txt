@@ -1,0 +1,6 @@
+{% load humanize %}Details:
+- Your reference: {{ case.opponent_reference|default:"not yet given" }}
+{% if case.account_reference %}- My account / number with you: {{ case.account_reference }}
+{% endif %}- Date of the problem: {{ case.incident_date|date:"j F Y" }}
+{% if amount %}- Amount at stake: KES {{ amount }}
+{% endif %}- My Fuatilia case reference: {{ case.reference }}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ case.reference }}{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <p class="muted"><a href="{% url 'case_detail' case.reference %}">← Back to case</a></p>
+  <h1>Edit case details</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "_form.html" %}
+    <button class="btn btn-primary" type="submit">Save changes</button>
+  </form>
+</div>
+{% endblock %}

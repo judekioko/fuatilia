@@ -1,0 +1,89 @@
+{% load static fuatilia %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evidence bundle {{ case.reference }}</title>
+  {% if for_zip %}
+  <style>
+    body { font: 15px/1.5 Georgia, "Times New Roman", serif; color: #111; max-width: 820px; margin: 24px auto; padding: 0 16px; }
+    h1, h2 { font-family: Arial, sans-serif; } table { border-collapse: collapse; width: 100%; }
+    td, th { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .quote { white-space: pre-wrap; background: #f4f4f4; padding: 8px; }
+  </style>
+  {% else %}
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <script src="{% static 'js/app.js' %}" defer></script>
+  {% endif %}
+</head>
+<body class="print-page">
+<div class="wrap bundle">
+  {% if not for_zip %}
+  <p class="no-print actions mt-20">
+    <a class="btn btn-secondary" href="{% url 'case_detail' case.reference %}">← Back to case</a>
+    <button class="btn btn-primary" data-print>Print or save as PDF</button>
+    <a class="btn btn-secondary" href="{% url 'bundle_zip' case.reference %}">Download ZIP with original files</a>
+  </p>
+  {% endif %}
+
+  <h1>Evidence bundle</h1>
+  <p><strong>{{ case.title }}</strong><br>
+    Case reference {{ case.reference }} · Prepared by {{ case.owner.full_name }} on {% now "j F Y" %}</p>
+
+  <h2>Summary</h2>
+  <table class="bundle-table">
+    <tr><th>Complaint against</th><td>{{ case.opponent_name }}</td></tr>
+    {% if case.opponent_reference %}<tr><th>Their reference</th><td>{{ case.opponent_reference }}</td></tr>{% endif %}
+    {% if case.account_reference %}<tr><th>Account / property</th><td>{{ case.account_reference }}</td></tr>{% endif %}
+    <tr><th>Date of the problem</th><td>{{ case.incident_date|date:"j F Y" }}</td></tr>
+    {% if case.amount_claimed %}<tr><th>Amount at stake</th><td>{{ case.amount_claimed|kes }}</td></tr>{% endif %}
+    <tr><th>Status</th><td>{{ case.get_status_display }}</td></tr>
+  </table>
+
+  <h2>What happened</h2>
+  <p>{{ case.description|linebreaksbr }}</p>
+  <h2>Outcome sought</h2>
+  <p>{{ case.desired_outcome|linebreaksbr }}</p>
+
+  <h2>Chronology</h2>
+  <table class="bundle-table">
+    <tr><th>Date</th><th>Event</th><th>Exhibits</th></tr>
+    {% for event in case.events.all %}{% if not event.automatic or event.kind != "NOTE" %}
+      <tr>
+        <td>{{ event.occurred_on|date:"j M Y" }}</td>
+        <td>{{ event.title }}{% if event.details and event.kind != "INCIDENT" %}<br><small>{{ event.details }}</small>{% endif %}</td>
+        <td>{% for item in event.evidence.all %}E{{ item.exhibit_number }} {% endfor %}</td>
+      </tr>
+    {% endif %}{% endfor %}
+  </table>
+
+  <h2>Index of exhibits</h2>
+  <table class="bundle-table">
+    <tr><th>No.</th><th>Date</th><th>Description</th><th>Type</th></tr>
+    {% for item in evidence %}
+      <tr><td>E{{ forloop.counter }}</td><td>{{ item.occurred_on|date:"j M Y"|default:"—" }}</td><td>{{ item.title }}</td><td>{{ item.get_kind_display }}</td></tr>
+    {% empty %}
+      <tr><td colspan="4">No exhibits yet.</td></tr>
+    {% endfor %}
+  </table>
+
+  {% for item in evidence %}
+    <section class="page-break exhibit-page">
+      <h2>Exhibit E{{ forloop.counter }}: {{ item.title }}</h2>
+      <p>{{ item.get_kind_display }}{% if item.occurred_on %} · {{ item.occurred_on|date:"j F Y" }}{% endif %}{% if item.notes %} · {{ item.notes }}{% endif %}</p>
+      {% if item.text %}<div class="quote">{{ item.text }}</div>{% endif %}
+      {% if item.file %}
+        {% if for_zip %}
+          <p>See file in the <em>exhibits</em> folder starting with E{{ forloop.counter|stringformat:"02d" }}.</p>
+        {% elif item.is_image %}
+          <img class="exhibit-image" src="{% url 'evidence_file' case.reference item.pk %}" alt="{{ item.title }}">
+        {% else %}
+          <p>Attached file: {{ item.original_filename }} (<a href="{% url 'evidence_file' case.reference item.pk %}">open</a>)</p>
+        {% endif %}
+      {% endif %}
+    </section>
+  {% endfor %}
+  <p class="muted small mt-20">Prepared by the complainant using Fuatilia, a case-organising tool. Fuatilia is not a party to this complaint and does not give legal advice.</p>
+</div>
+</body>
+</html>

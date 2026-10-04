@@ -1,0 +1,31 @@
+<div class="card">
+  <div class="page-head">
+    <h2>Evidence</h2>
+    <div class="actions">
+      <a class="btn btn-primary btn-sm" href="{% url 'evidence_add' case.reference %}">+ Add evidence</a>
+      {% if evidence %}<a class="btn btn-secondary btn-sm" href="{% url 'bundle_zip' case.reference %}">Download bundle (ZIP)</a>{% endif %}
+    </div>
+  </div>
+  {% if evidence %}
+    <ul class="evidence-list">
+      {% for item in evidence %}
+        <li>
+          <span class="exhibit">E{{ forloop.counter }}</span>
+          {% if item.file and item.is_image %}<a href="{% url 'evidence_file' case.reference item.pk %}" target="_blank"><img src="{% url 'evidence_file' case.reference item.pk %}" alt="{{ item.title }}"></a>{% endif %}
+          <div class="grow">
+            <strong>{{ item.title }}</strong>
+            <div class="muted">{{ item.get_kind_display }}{% if item.occurred_on %} · {{ item.occurred_on|date:"j M Y" }}{% endif %}{% if item.file %} · <a href="{% url 'evidence_file' case.reference item.pk %}" target="_blank">open file</a>{% endif %}</div>
+            {% if item.text %}<div class="quote">{{ item.text|truncatechars:600 }}</div>{% endif %}
+            {% if item.notes %}<div class="muted">{{ item.notes }}</div>{% endif %}
+          </div>
+          <form method="post" action="{% url 'evidence_delete' case.reference item.pk %}">{% csrf_token %}<button class="btn-link" type="submit" data-confirm="Remove this evidence?">Remove</button></form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty">
+      <p><strong>No evidence yet.</strong></p>
+      <p>Screenshots, receipts, photos, or paste an SMS or M-Pesa message.</p>
+    </div>
+  {% endif %}
+</div>

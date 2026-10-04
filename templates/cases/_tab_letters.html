@@ -1,0 +1,22 @@
+<div class="card">
+  <h2>Letters</h2>
+  <p class="muted">Letters are drafted from your case details for you to review, edit and send yourself. You are the sender.</p>
+  <form method="post" action="{% url 'letter_new' case.reference %}" class="actions mb-16">
+    {% csrf_token %}
+    <select name="template" aria-label="Letter type" class="w-auto">
+      {% for key, template in letter_choices.items %}<option value="{{ key }}">{{ template.name }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-primary btn-sm" type="submit">Draft letter</button>
+  </form>
+  {% for letter in letters %}
+    <div class="case-row row-divider">
+      <div>
+        <a href="{% url 'letter_edit' case.reference letter.pk %}"><strong>{{ letter.subject }}</strong></a>
+        <div class="muted">{% if letter.sent_on %}Sent {{ letter.sent_on|date:"j M Y" }} by {{ letter.sent_via }}{% else %}Draft · {{ letter.created_at|date:"j M Y" }}{% endif %}</div>
+      </div>
+      {% if letter.sent_on %}<span class="badge tone-green">Sent</span>{% else %}<span class="badge tone-grey">Draft</span>{% endif %}
+    </div>
+  {% empty %}
+    <p class="muted">No letters yet.</p>
+  {% endfor %}
+</div>

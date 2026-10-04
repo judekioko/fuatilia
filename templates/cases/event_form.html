@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Add to timeline{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <p class="muted"><a href="{% url 'case_detail' case.reference %}?tab=timeline">← Back to {{ case.reference }}</a></p>
+  <h1>Add to the timeline</h1>
+  <p class="muted">Record every call, reply, promise or silence. Dates matter when you escalate.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "_form.html" %}
+    <button class="btn btn-primary" type="submit">Add</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% load fuatilia %}{% autoescape off %}{{ today|date:"j F Y" }}
+
+To: {{ case.opponent_name }} – Customer Care / Complaints
+
+Dear Sir or Madam,
+
+RE: COMPLAINT – {{ case.title|upper }}{% if case.account_reference %} – LINE / ACCOUNT {{ case.account_reference }}{% endif %}
+
+I am a customer on {{ case.account_reference|default:"[phone number or account]" }} and I am writing to formally complain about the following.
+
+{{ case.description }}
+
+{% include "letters/_facts.txt" %}
+What I am asking you to do:
+{{ case.desired_outcome }}
+
+Please acknowledge this complaint, give me a complaint reference number and resolve it. If it is not resolved, I will escalate it to the regulator.
+
+{% include "letters/_signature.txt" %}
+{% endautoescape %}

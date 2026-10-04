@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ letter.subject }}{% endblock %}
+{% block content %}
+<p class="muted"><a href="{% url 'case_detail' case.reference %}?tab=letters">← Back to {{ case.reference }}</a></p>
+<div class="with-aside">
+  <div class="card">
+    <h1>{% if letter.sent_on %}Sent letter{% else %}Draft letter{% endif %}</h1>
+    <p class="muted">Check every fact, change anything you like, then send it yourself. Fuatilia never sends letters for you.</p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% include "_form.html" %}
+      <div class="actions">
+        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-secondary" type="button" data-copy="#id_body">Copy text</button>
+        <button class="btn btn-secondary" type="button" data-mailto>Open in my email</button>
+        <a class="btn btn-secondary" href="{% url 'letter_print' case.reference letter.pk %}" target="_blank">Print / PDF</a>
+      </div>
+    </form>
+  </div>
+  <aside class="stack">
+    <div class="card">
+      <h2>After you send it</h2>
+      {% if letter.sent_on %}
+        <p>Recorded as sent on <strong>{{ letter.sent_on|date:"j M Y" }}</strong> by {{ letter.sent_via }}.</p>
+      {% else %}
+        <p>Record when and how you sent it. It goes on your timeline as proof.</p>
+        <form method="post" action="{% url 'letter_sent' case.reference letter.pk %}" novalidate>
+          {% csrf_token %}
+          {% with form=sent_form %}{% include "_form.html" %}{% endwith %}
+          <button class="btn btn-primary btn-sm" type="submit">Mark as sent</button>
+        </form>
+      {% endif %}
+    </div>
+    <div class="card">
+      <p class="muted small">This letter was prepared by you using a template. It is not legal advice. If the matter is complex or the amount is large, consider speaking to an advocate or a legal aid organisation.</p>
+      <form method="post" action="{% url 'letter_delete' case.reference letter.pk %}">{% csrf_token %}<button class="btn-link" type="submit" data-confirm="Delete this letter?">Delete letter</button></form>
+    </div>
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% load fuatilia %}{% autoescape off %}{{ today|date:"j F Y" }}
+
+To: [Name of the regulator or office]
+
+Dear Sir or Madam,
+
+RE: COMPLAINT AGAINST {{ case.opponent_name|upper }} – {{ case.title|upper }}
+
+I wish to lodge a complaint against {{ case.opponent_name }}. I have tried to resolve it directly with them but it remains unresolved.
+
+What happened:
+{{ case.description }}
+
+{% include "letters/_facts.txt" %}
+Steps I have taken so far:
+{% for event in events %}- {{ event.occurred_on|date:"j M Y" }}: {{ event.title }}{% if event.details and event.kind != "INCIDENT" %} – {{ event.details|truncatechars:160 }}{% endif %}
+{% endfor %}
+The outcome I am seeking:
+{{ case.desired_outcome }}
+
+I attach my evidence bundle{% if evidence %} with {{ evidence|length }} supporting document{{ evidence|length|pluralize }}{% endif %}, including copies of my correspondence with {{ case.opponent_name }}. I would be grateful if you would look into this complaint and let me know the next steps.
+
+{% include "letters/_signature.txt" %}
+{% endautoescape %}

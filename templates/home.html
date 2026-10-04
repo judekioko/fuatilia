@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Never lose track of a problem again{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="badge tone-green">For anyone in Kenya chasing a refund, a reply or a document</p>
+  <h1>“Your issue has been escalated.” Then silence. Fuatilia keeps pushing.</h1>
+  <p class="lead">Turn a problem with a company, landlord or office into an organised case: your evidence in one place, a clear timeline, letters ready to send, and a reminder every time it is time to follow up.</p>
+  <div class="actions mt-20">
+    <a class="btn btn-primary" href="{% url 'signup' %}">Start your first case, free</a>
+    <a class="btn btn-secondary" href="#how">How it works</a>
+  </div>
+</section>
+
+<section id="how" class="grid-3 mt-12">
+  <div class="card">
+    <h2>1. Tell us what happened</h2>
+    <p>Who it is against, when it happened, how much is at stake and what you want them to do.</p>
+  </div>
+  <div class="card">
+    <h2>2. Gather your evidence</h2>
+    <p>Upload screenshots, receipts and photos, or paste the M-Pesa or SMS message. It is dated and numbered for you.</p>
+  </div>
+  <div class="card">
+    <h2>3. Follow the route to an answer</h2>
+    <p>Step-by-step: complain, follow up, escalate to the right regulator or the Small Claims Court, with reminders so nothing goes quiet.</p>
+  </div>
+</section>
+
+<section class="card mt-20">
+  <h2>What people use it for</h2>
+  <div class="category-grid mt-12">
+    {% for value, label in categories %}<a href="{% url 'signup' %}">{{ label }}</a>{% endfor %}
+  </div>
+</section>
+
+<section class="grid-2 mt-20">
+  <div class="card">
+    <h2>Your evidence bundle, ready to hand over</h2>
+    <p>One click produces a dated chronology, a numbered list of exhibits and copies of every letter, as a printable page or a ZIP file for a regulator, ombudsman or court.</p>
+  </div>
+  <div class="card">
+    <h2>Private by design</h2>
+    <p>Your documents are encrypted and only you can open them. Download everything or delete your account at any time. Read the <a href="{% url 'privacy' %}">privacy notice</a>.</p>
+  </div>
+</section>
+
+<p class="muted mt-24">Fuatilia is an organising tool. You stay in charge: you write and send your own letters, and Fuatilia never acts for you or gives legal advice. For legal advice, contact an advocate or a legal aid organisation such as the National Legal Aid Service or Kituo cha Sheria.</p>
+{% endblock %}

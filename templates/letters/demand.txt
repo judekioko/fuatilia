@@ -1,0 +1,19 @@
+{% load fuatilia %}{% autoescape off %}{{ today|date:"j F Y" }}
+
+To: {{ case.opponent_name }}
+
+Dear Sir or Madam,
+
+RE: FINAL DEMAND – {{ case.title|upper }}
+
+Despite my earlier requests{% if first_letter %}, including my letter of {{ first_letter.sent_on|date:"j F Y" }}{% endif %}, this matter remains unresolved.
+
+{{ case.description }}
+
+{% include "letters/_facts.txt" %}
+I hereby demand that you {{ case.desired_outcome|lower }}{% if amount %}, including payment of KES {{ amount }},{% endif %} within 14 days of this letter, that is by {{ today|add_days:14|date:"j F Y" }}.
+
+If this is not done by that date, I will pursue the other remedies available to me without further notice.
+
+{% include "letters/_signature.txt" %}
+{% endautoescape %}

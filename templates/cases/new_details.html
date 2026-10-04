@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}New case{% endblock %}
+{% block content %}
+<div class="with-aside">
+  <div class="card">
+    <p class="muted"><a href="{% url 'case_new' %}">← Change type</a> · {{ category_label }}</p>
+    <h1>Tell us what happened</h1>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="category" value="{{ category }}">
+      {% include "_form.html" %}
+      <button class="btn btn-primary" type="submit">Open case</button>
+    </form>
+  </div>
+  <aside class="card">
+    <h2>The route: {{ playbook.name }}</h2>
+    <p class="muted">{{ playbook.summary }}</p>
+    <ol>{% for step in playbook.steps %}<li>{{ step.title }}</li>{% endfor %}</ol>
+    <h3 class="mt-12">Evidence to gather</h3>
+    <ul class="checklist">{% for item in playbook.evidence_checklist %}<li>{{ item }}</li>{% endfor %}</ul>
+  </aside>
+</div>
+{% endblock %}

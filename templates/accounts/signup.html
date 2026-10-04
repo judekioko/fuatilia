@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Create your account{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>Create your account</h1>
+  <p class="muted">Free. Your cases and documents are private to you.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "_form.html" %}
+    <p class="help muted">Read the <a href="{% url 'privacy' %}">privacy notice</a> before agreeing.</p>
+    <button class="btn btn-primary btn-block" type="submit">Create account</button>
+  </form>
+  <p class="mt-12">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+</div>
+{% endblock %}
